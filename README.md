@@ -49,7 +49,7 @@ Prettierオプション付きでnpm run formatコマンドを実行します。
   - `npm run test` (テスト実行用)
   - `npm run lint` (リント実行用)
   - `npm run format` (フォーマット実行用)
-- プロジェクトルートに`.amazonq/rules/`ディレクトリを作成し、コード品質検証ルールファイルを配置すること（推奨）
+- コード品質検証ルールを記述したファイルを配置すること（推奨）
   - 例: [quality-verification.md](quality-verification.md)
 
 **package.json設定例:**
