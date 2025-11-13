@@ -17,7 +17,7 @@ Jestオプション付きでnpm run testコマンドを実行します。
 **パラメータ:**
 
 - `cwd` (オプション): 作業ディレクトリ
-- `jestOptions` (オプション): Jestオプション (例: '--watch', '--coverage', '--testPathPattern=string.test.js')
+- `jestOptions` (必須): Jestオプション (例: '--watch', '--coverage', '--testPathPattern=string.test.js')
 
 ### `run_lint`
 
@@ -26,7 +26,7 @@ ESLintオプション付きでnpm run lintコマンドを実行します。
 **パラメータ:**
 
 - `cwd` (オプション): 作業ディレクトリ
-- `eslintOptions` (オプション): ESLintオプション (例: '--fix', '--quiet', 'src/specific-file.js')
+- `eslintOptions` (必須): ESLintオプション (例: '--fix', '--quiet', 'src/specific-file.js')
 
 ### `run_format`
 
@@ -35,7 +35,9 @@ Prettierオプション付きでnpm run formatコマンドを実行します。
 **パラメータ:**
 
 - `cwd` (オプション): 作業ディレクトリ
-- `prettierOptions` (オプション): Prettierオプション (例: '--check', '--list-different', 'src/specific-file.js')
+- `prettierOptions` (必須): Prettierオプション (例: '--check', '--list-different', 'src/specific-file.js')
+
+**注意:** フォーマットしてファイルを保存するため、`--write`オプションが含まれていない場合、自動的に`--write`を追加します。
 
 ## セットアップ
 
@@ -47,6 +49,8 @@ Prettierオプション付きでnpm run formatコマンドを実行します。
   - `npm run test` (テスト実行用)
   - `npm run lint` (リント実行用)
   - `npm run format` (フォーマット実行用)
+- プロジェクトルートに`.amazonq/rules/`ディレクトリを作成し、コード品質検証ルールファイルを配置すること（推奨）
+  - 例: [quality-verification.md](quality-verification.md)
 
 **package.json設定例:**
 
@@ -54,8 +58,8 @@ Prettierオプション付きでnpm run formatコマンドを実行します。
 {
   "scripts": {
     "test": "jest",
-    "lint": "eslint \"**/*.js\"",
-    "format": "prettier --write src/**/*.js"
+    "lint": "eslint",
+    "format": "prettier"
   }
 }
 ```
