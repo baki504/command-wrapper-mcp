@@ -67,13 +67,12 @@ server.tool(
     try {
       const options = cwd ? { cwd } : {};
       const command = `npm run lint -- ${eslintOptions}`;
-      const { stdout, stderr } = await execAsync(command, options);
-      const output = stdout + (stderr ? `\nSTDERR: ${stderr}` : "");
+      const { stdout } = await execAsync(command, options);
       return {
         content: [
           {
             type: "text",
-            text: output || "(no output)",
+            text: stdout || "(no output)",
           },
         ],
       };
@@ -108,7 +107,7 @@ server.tool(
         ? prettierOptions
         : `--write ${prettierOptions}`;
       const command = `npm run format -- ${finalOptions}`;
-      const { stdout, stderr } = await execAsync(command, options);
+      const { stdout } = await execAsync(command, options);
       return {
         content: [
           {
