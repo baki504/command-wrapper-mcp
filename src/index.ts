@@ -77,12 +77,12 @@ server.tool(
           },
         ],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         content: [
           {
             type: "text",
-            text: `Error: ${error}`,
+            text: error.message,
           },
         ],
       };
