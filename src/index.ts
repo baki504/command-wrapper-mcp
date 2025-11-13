@@ -7,7 +7,7 @@ import { promisify } from "util";
 const execAsync = promisify(exec);
 
 const server = new McpServer({
-  name: "command-warapper-mcp",
+  name: "command-wrapper-mcp",
   version: "1.0.0",
   capabilities: {
     resources: {},
