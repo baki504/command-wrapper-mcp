@@ -8,37 +8,6 @@
 - **静的解析**: 設定可能なパラメータでESLintを実行
 - **コードフォーマット**: 様々なオプションでPrettierフォーマットを実行
 
-## 利用可能なツール
-
-### `run_test`
-
-Jestオプション付きでnpm run testコマンドを実行します。
-
-**パラメータ:**
-
-- `cwd` (オプション): 作業ディレクトリ
-- `jestOptions` (必須): Jestオプション (例: '--watch', '--coverage', '--testPathPattern=string.test.js')
-
-### `run_lint`
-
-ESLintオプション付きでnpm run lintコマンドを実行します。
-
-**パラメータ:**
-
-- `cwd` (オプション): 作業ディレクトリ
-- `eslintOptions` (必須): ESLintオプション (例: '--fix', '--quiet', 'src/specific-file.js')
-
-### `run_format`
-
-Prettierオプション付きでnpm run formatコマンドを実行します。
-
-**パラメータ:**
-
-- `cwd` (オプション): 作業ディレクトリ
-- `prettierOptions` (必須): Prettierオプション (例: '--check', '--list-different', 'src/specific-file.js')
-
-**注意:** フォーマットしてファイルを保存するため、`--write`オプションが含まれていない場合、自動的に`--write`を追加します。
-
 ## セットアップ
 
 ### 前提条件
@@ -103,6 +72,37 @@ MCPクライアント設定に以下の設定を追加してください:
 ```
 
 `</path/to/node/dir>`と`<path/to/command-wrapper-mcp>`を実際のパスに置き換えてください。
+
+## 利用可能なツール
+
+### `run_test`
+
+Jestオプション付きでnpm run testコマンドを実行します。
+
+**パラメータ:**
+
+- `cwd` (オプション): 作業ディレクトリ
+- `jestOptions` (必須): Jestオプション (例: '--watch', '--coverage', '--testPathPattern=string.test.js')
+
+### `run_lint`
+
+ESLintオプション付きでnpm run lintコマンドを実行します。
+
+**パラメータ:**
+
+- `cwd` (オプション): 作業ディレクトリ
+- `eslintOptions` (必須): ESLintオプション (例: '--fix', '--quiet', 'src/specific-file.js')
+
+### `run_format`
+
+Prettierオプション付きでnpm run formatコマンドを実行します。
+
+**パラメータ:**
+
+- `cwd` (オプション): 作業ディレクトリ
+- `prettierOptions` (必須): Prettierオプション (例: '--check', '--list-different', 'src/specific-file.js')
+
+**注意:** フォーマットしてファイルを保存するため、`--write`オプションが含まれていない場合、自動的に`--write`を追加します。
 
 ## ライセンス
 
