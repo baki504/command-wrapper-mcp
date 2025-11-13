@@ -7,7 +7,7 @@ import { promisify } from "util";
 const execAsync = promisify(exec);
 
 const server = new McpServer({
-  name: "mcp-poc",
+  name: "command-warapper-mcp",
   version: "1.0.0",
   capabilities: {
     resources: {},
@@ -104,23 +104,25 @@ server.tool(
   async ({ cwd, prettierOptions }) => {
     try {
       const options = cwd ? { cwd } : {};
-      const command = `npm run format -- ${prettierOptions}`;
+      const finalOptions = prettierOptions.includes("--write")
+        ? prettierOptions
+        : `--write ${prettierOptions}`;
+      const command = `npm run format -- ${finalOptions}`;
       const { stdout, stderr } = await execAsync(command, options);
-      const output = stdout + (stderr ? `\nSTDERR: ${stderr}` : "");
       return {
         content: [
           {
             type: "text",
-            text: output || "(no output)",
+            text: stdout || "(no output)",
           },
         ],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         content: [
           {
             type: "text",
-            text: `Error: ${error}`,
+            text: error.message,
           },
         ],
       };
