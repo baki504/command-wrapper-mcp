@@ -22,7 +22,6 @@ server.tool(
     cwd: z.string().optional().describe("Working directory (optional)"),
     jestOptions: z
       .string()
-      .optional()
       .describe(
         "Jest options (e.g., '--watch', '--coverage', '--testPathPattern=string.test.js')"
       ),
@@ -30,16 +29,13 @@ server.tool(
   async ({ cwd, jestOptions }) => {
     try {
       const options = cwd ? { cwd } : {};
-      const command = jestOptions
-        ? `npm run test -- ${jestOptions}`
-        : "npm run test";
+      const command = `npm run test -- ${jestOptions}`;
       const { stdout, stderr } = await execAsync(command, options);
-      const output = stdout + (stderr ? `\nSTDERR: ${stderr}` : "");
       return {
         content: [
           {
             type: "text",
-            text: output || "(no output)",
+            text: `${stdout}\n${stderr}` || "(no output)",
           },
         ],
       };
@@ -63,7 +59,6 @@ server.tool(
     cwd: z.string().optional().describe("Working directory (optional)"),
     eslintOptions: z
       .string()
-      .optional()
       .describe(
         "ESLint options (e.g., '--fix', '--quiet', 'src/specific-file.js')"
       ),
@@ -71,9 +66,7 @@ server.tool(
   async ({ cwd, eslintOptions }) => {
     try {
       const options = cwd ? { cwd } : {};
-      const command = eslintOptions
-        ? `npm run lint -- ${eslintOptions}`
-        : "npm run lint";
+      const command = `npm run lint -- ${eslintOptions}`;
       const { stdout, stderr } = await execAsync(command, options);
       const output = stdout + (stderr ? `\nSTDERR: ${stderr}` : "");
       return {
@@ -104,7 +97,6 @@ server.tool(
     cwd: z.string().optional().describe("Working directory (optional)"),
     prettierOptions: z
       .string()
-      .optional()
       .describe(
         "Prettier options (e.g., '--check', '--list-different', 'src/specific-file.js')"
       ),
@@ -112,9 +104,7 @@ server.tool(
   async ({ cwd, prettierOptions }) => {
     try {
       const options = cwd ? { cwd } : {};
-      const command = prettierOptions
-        ? `npm run format -- ${prettierOptions}`
-        : "npm run format";
+      const command = `npm run format -- ${prettierOptions}`;
       const { stdout, stderr } = await execAsync(command, options);
       const output = stdout + (stderr ? `\nSTDERR: ${stderr}` : "");
       return {
