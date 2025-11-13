@@ -7,7 +7,7 @@ import { promisify } from "util";
 const execAsync = promisify(exec);
 
 const server = new McpServer({
-  name: "mcp-poc",
+  name: "command-wrapper-mcp",
   version: "1.0.0",
   capabilities: {
     resources: {},
@@ -22,7 +22,6 @@ server.tool(
     cwd: z.string().optional().describe("Working directory (optional)"),
     jestOptions: z
       .string()
-      .optional()
       .describe(
         "Jest options (e.g., '--watch', '--coverage', '--testPathPattern=string.test.js')"
       ),
@@ -30,25 +29,22 @@ server.tool(
   async ({ cwd, jestOptions }) => {
     try {
       const options = cwd ? { cwd } : {};
-      const command = jestOptions
-        ? `npm run test -- ${jestOptions}`
-        : "npm run test";
+      const command = `npm run test -- ${jestOptions}`;
       const { stdout, stderr } = await execAsync(command, options);
-      const output = stdout + (stderr ? `\nSTDERR: ${stderr}` : "");
       return {
         content: [
           {
             type: "text",
-            text: output || "(no output)",
+            text: `${stdout}\n${stderr}` || "(no output)",
           },
         ],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         content: [
           {
             type: "text",
-            text: `Error: ${error}`,
+            text: error.message,
           },
         ],
       };
@@ -63,7 +59,6 @@ server.tool(
     cwd: z.string().optional().describe("Working directory (optional)"),
     eslintOptions: z
       .string()
-      .optional()
       .describe(
         "ESLint options (e.g., '--fix', '--quiet', 'src/specific-file.js')"
       ),
@@ -71,25 +66,22 @@ server.tool(
   async ({ cwd, eslintOptions }) => {
     try {
       const options = cwd ? { cwd } : {};
-      const command = eslintOptions
-        ? `npm run lint -- ${eslintOptions}`
-        : "npm run lint";
-      const { stdout, stderr } = await execAsync(command, options);
-      const output = stdout + (stderr ? `\nSTDERR: ${stderr}` : "");
+      const command = `npm run lint -- ${eslintOptions}`;
+      const { stdout } = await execAsync(command, options);
       return {
         content: [
           {
             type: "text",
-            text: output || "(no output)",
+            text: stdout || "(no output)",
           },
         ],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         content: [
           {
             type: "text",
-            text: `Error: ${error}`,
+            text: error.message,
           },
         ],
       };
@@ -104,7 +96,6 @@ server.tool(
     cwd: z.string().optional().describe("Working directory (optional)"),
     prettierOptions: z
       .string()
-      .optional()
       .describe(
         "Prettier options (e.g., '--check', '--list-different', 'src/specific-file.js')"
       ),
@@ -112,25 +103,25 @@ server.tool(
   async ({ cwd, prettierOptions }) => {
     try {
       const options = cwd ? { cwd } : {};
-      const command = prettierOptions
-        ? `npm run format -- ${prettierOptions}`
-        : "npm run format";
-      const { stdout, stderr } = await execAsync(command, options);
-      const output = stdout + (stderr ? `\nSTDERR: ${stderr}` : "");
+      const finalOptions = prettierOptions.includes("--write")
+        ? prettierOptions
+        : `--write ${prettierOptions}`;
+      const command = `npm run format -- ${finalOptions}`;
+      const { stdout } = await execAsync(command, options);
       return {
         content: [
           {
             type: "text",
-            text: output || "(no output)",
+            text: stdout || "(no output)",
           },
         ],
       };
-    } catch (error) {
+    } catch (error: any) {
       return {
         content: [
           {
             type: "text",
-            text: `Error: ${error}`,
+            text: error.message,
           },
         ],
       };
