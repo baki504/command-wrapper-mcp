@@ -1,10 +1,14 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { ToolDefinition } from "./types/Tool.js";
 import { runTest } from "./tools/runTest.js";
 import { runLint } from "./tools/runLint.js";
 import { runFormat } from "./tools/runFormat.js";
 import { gitCommand } from "./tools/gitCommand.js";
-import { createCustomCommandTool, customCommands } from "./tools/customCommands.js";
+import {
+  createCustomCommandTool,
+  customCommands,
+} from "./tools/customCommands.js";
 
 const server = new McpServer({
   name: "command-wrapper-mcp",
@@ -15,14 +19,14 @@ const server = new McpServer({
   },
 });
 
-server.tool(runTest.name, runTest.description, runTest.schema, runTest.handler);
-server.tool(runLint.name, runLint.description, runLint.schema, runLint.handler);
-server.tool(runFormat.name, runFormat.description, runFormat.schema, runFormat.handler);
-server.tool(gitCommand.name, gitCommand.description, gitCommand.schema, gitCommand.handler);
+const registerTool = (tool: ToolDefinition) => {
+  server.tool(tool.name, tool.description, tool.schema, tool.handler);
+};
+
+[runTest, runLint, runFormat, gitCommand].forEach(registerTool);
 
 customCommands.forEach((cmd) => {
-  const tool = createCustomCommandTool(cmd);
-  server.tool(tool.name, tool.description, tool.schema, tool.handler);
+  registerTool(createCustomCommandTool(cmd));
 });
 
 async function main() {
