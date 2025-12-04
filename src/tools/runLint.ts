@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { exec } from "child_process";
 import { promisify } from "util";
+import { ToolDefinition } from "../types/Tool.js";
 
 const execAsync = promisify(exec);
 
-export const runLint = {
+export const runLint: ToolDefinition = {
   name: "run_lint",
   description: "Execute npm run lint command",
   schema: {
@@ -15,7 +16,7 @@ export const runLint = {
         "ESLint options (e.g., '--fix', '--quiet', 'src/specific-file.js')"
       ),
   },
-  handler: async ({ cwd, eslintOptions }: { cwd?: string; eslintOptions: string }) => {
+  handler: async ({ cwd, eslintOptions }) => {
     try {
       const options = cwd ? { cwd } : {};
       const command = `npm run lint -- ${eslintOptions}`;

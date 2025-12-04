@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { exec } from "child_process";
 import { promisify } from "util";
+import { ToolDefinition } from "../types/Tool.js";
 
 const execAsync = promisify(exec);
 
@@ -24,14 +25,14 @@ const customCommands: CustomCommand[] = [
   },
 ];
 
-export const createCustomCommandTool = (cmd: CustomCommand) => ({
+export const createCustomCommandTool = (cmd: CustomCommand): ToolDefinition => ({
   name: cmd.name,
   description: cmd.description,
   schema: {
     cwd: z.string().optional().describe("Working directory (optional)"),
     options: z.string().optional().describe("Command options"),
   },
-  handler: async ({ cwd, options }: { cwd?: string; options?: string }) => {
+  handler: async ({ cwd, options }) => {
     try {
       const execOptions = cwd
         ? { cwd, maxBuffer: 10 * 1024 * 1024 }

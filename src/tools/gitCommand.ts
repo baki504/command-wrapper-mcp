@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { exec } from "child_process";
 import { promisify } from "util";
+import { ToolDefinition } from "../types/Tool.js";
 
 const execAsync = promisify(exec);
 
@@ -21,7 +22,7 @@ const BLOCKED_GIT_COMMANDS = [
   "branch -D",
 ];
 
-export const gitCommand = {
+export const gitCommand: ToolDefinition = {
   name: "git_command",
   description: "Execute git command with --no-pager option",
   schema: {
@@ -36,7 +37,7 @@ export const gitCommand = {
         "Git command options (e.g., 'main', 'HEAD~1', '--cached', '-a')"
       ),
   },
-  handler: async ({ cwd, subcommand, options }: { cwd?: string; subcommand: string; options?: string }) => {
+  handler: async ({ cwd, subcommand, options }) => {
     const fullCommand = options ? `${subcommand} ${options}` : subcommand;
 
     if (

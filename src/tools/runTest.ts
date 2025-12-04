@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { exec } from "child_process";
 import { promisify } from "util";
+import { ToolDefinition } from "../types/Tool.js";
 
 const execAsync = promisify(exec);
 
-export const runTest = {
+export const runTest: ToolDefinition = {
   name: "run_test",
   description: "Execute npm run test command",
   schema: {
@@ -15,7 +16,7 @@ export const runTest = {
         "Jest options (e.g., '--watch', '--coverage', '--testPathPattern=string.test.js')"
       ),
   },
-  handler: async ({ cwd, jestOptions }: { cwd?: string; jestOptions: string }) => {
+  handler: async ({ cwd, jestOptions }) => {
     try {
       const options = cwd ? { cwd } : {};
       const command = `npm run test -- ${jestOptions}`;

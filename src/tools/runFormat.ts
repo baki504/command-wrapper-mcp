@@ -1,10 +1,11 @@
 import { z } from "zod";
 import { exec } from "child_process";
 import { promisify } from "util";
+import { ToolDefinition } from "../types/Tool.js";
 
 const execAsync = promisify(exec);
 
-export const runFormat = {
+export const runFormat: ToolDefinition = {
   name: "run_format",
   description: "Execute npm run format command",
   schema: {
@@ -15,7 +16,7 @@ export const runFormat = {
         "Prettier options (e.g., '--check', '--list-different', 'src/specific-file.js')"
       ),
   },
-  handler: async ({ cwd, prettierOptions }: { cwd?: string; prettierOptions: string }) => {
+  handler: async ({ cwd, prettierOptions }) => {
     try {
       const options = cwd ? { cwd } : {};
       const finalOptions = prettierOptions.includes("--write")
