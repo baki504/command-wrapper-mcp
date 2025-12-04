@@ -1,12 +1,14 @@
 # Command Wrapper MCP
 
-テスト、静的解析、フォーマットのコマンドを実行するためのツールを提供するModel Context Protocol (MCP) サーバーです。
+テスト、静的解析、フォーマット、Git操作などのコマンドを実行するためのツールを提供するModel Context Protocol (MCP) サーバーです。
 
 ## 機能
 
 - **テスト**: カスタマイズ可能なオプションでJestテストを実行
 - **静的解析**: 設定可能なパラメータでESLintを実行
 - **コードフォーマット**: 様々なオプションでPrettierフォーマットを実行
+- **Git操作**: 安全なGitコマンドの実行（危険なコマンドはブロック）
+- **カスタムコマンド**: ディレクトリ操作やNode.jsバージョン確認など
 
 ## セットアップ
 
@@ -103,6 +105,39 @@ Prettierオプション付きでnpm run formatコマンドを実行します。
 - `prettierOptions` (必須): Prettierオプション (例: '--check', '--list-different', 'src/specific-file.js')
 
 **注意:** フォーマットしてファイルを保存するため、`--write`オプションが含まれていない場合、自動的に`--write`を追加します。
+
+### `git_command`
+
+安全なGitコマンドを`--no-pager`オプション付きで実行します。
+
+**パラメータ:**
+
+- `cwd` (オプション): 作業ディレクトリ
+- `subcommand` (必須): Gitサブコマンド (例: 'diff', 'log', 'status', 'branch')
+- `options` (オプション): Gitコマンドオプション (例: 'main', 'HEAD~1', '--cached', '-a')
+
+**ブロックされるコマンド:** merge, push, pull, reset, clean, rebase, commit, cherry-pick, revert, rm, mv, tag, branch -d, branch -D
+
+### カスタムコマンド
+
+以下のカスタムコマンドが利用可能です：
+
+#### `list_directory`
+
+ディレクトリの内容を一覧表示します。
+
+#### `make_directory`
+
+ディレクトリを作成します。
+
+#### `check_node_version`
+
+Node.jsのバージョンを確認します。
+
+**共通パラメータ:**
+
+- `cwd` (オプション): 作業ディレクトリ
+- `options` (オプション): コマンドオプション
 
 ## ライセンス
 
