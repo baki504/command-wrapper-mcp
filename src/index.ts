@@ -129,6 +129,125 @@ server.tool(
   }
 );
 
+const BLOCKED_GIT_COMMANDS = [
+  "merge",
+  "push",
+  "pull",
+  "reset",
+  "clean",
+  "rebase",
+  // "checkout",
+  // "switch",
+  "commit",
+  "cherry-pick",
+  "revert",
+  "rm",
+  "mv",
+  "tag",
+  "branch -d",
+  "branch -D",
+];
+
+server.tool(
+  "git_command",
+  "Execute git command with --no-pager option",
+  {
+    cwd: z.string().optional().describe("Working directory (optional)"),
+    subcommand: z
+      .string()
+      .describe("Git subcommand (e.g., 'diff', 'log', 'status', 'branch')"),
+    options: z
+      .string()
+      .optional()
+      .describe(
+        "Git command options (e.g., 'main', 'HEAD~1', '--cached', '-a')"
+      ),
+  },
+  async ({ cwd, subcommand, options }) => {
+    const fullCommand = options ? `${subcommand} ${options}` : subcommand;
+
+    if (
+      BLOCKED_GIT_COMMANDS.some((blocked) => fullCommand.startsWith(blocked))
+    ) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `⚠️ Command 'git ${fullCommand}' is blocked for safety.\nBlocked commands: ${BLOCKED_GIT_COMMANDS.join(", ")}\nPlease execute manually if needed.`,
+          },
+        ],
+      };
+    }
+
+    try {
+      const execOptions = cwd
+        ? { cwd, maxBuffer: 10 * 1024 * 1024 }
+        : { maxBuffer: 10 * 1024 * 1024 };
+      const command = options
+        ? `git --no-pager ${subcommand} ${options}`
+        : `git --no-pager ${subcommand}`;
+      const { stdout, stderr } = await execAsync(command, execOptions);
+      return {
+        content: [{ type: "text", text: stdout || stderr || "(no output)" }],
+      };
+    } catch (error: any) {
+      return {
+        content: [{ type: "text", text: error.message }],
+      };
+    }
+  }
+);
+
+/**
+
+カスタムルール定義 **/
+type CustomCommand = { name: string; description: string; command: string };
+const customCommands: CustomCommand[] = [
+  // カスタムコマンドをここに追加
+  {
+    name: "list_directory",
+    description: "List directory contents",
+    command: "dir",
+  },
+  {
+    name: "make_directory",
+    description: "Make directory contents",
+    command: "mkdir",
+  },
+  {
+    name: "check_node_version",
+    description: "Check Node.js version",
+    command: "node --version",
+  },
+];
+
+customCommands.forEach((cmd: CustomCommand) => {
+  server.tool(
+    cmd.name,
+    cmd.description,
+    {
+      cwd: z.string().optional().describe("Working directory (optional)"),
+      options: z.string().optional().describe("Command options"),
+    },
+    async ({ cwd, options }) => {
+      try {
+        const execOptions = cwd
+          ? { cwd, maxBuffer: 10 * 1024 * 1024 }
+          : { maxBuffer: 10 * 1024 * 1024 };
+        const command = options ? `${cmd.command} ${options}` : cmd.command;
+        const { stdout, stderr } = await execAsync(command, execOptions);
+        return {
+          content: [{ type: "text", text: stdout || stderr || "(no output)" }],
+        };
+      } catch (error: any) {
+        return {
+          content: [{ type: "text", text: error.message }],
+        };
+      }
+    }
+  );
+});
+
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
