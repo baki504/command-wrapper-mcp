@@ -5,21 +5,29 @@ import { ToolDefinition } from "../types/Tool.js";
 
 const execAsync = promisify(exec);
 
+// ※取扱注意
 const BLOCKED_GIT_COMMANDS = [
-  "merge",
-  "push",
-  "pull",
+  // === リスク高
+  // "push",
+  // "pull",
+  // "merge",
+  // "rebase",
+  // === リスク中
+  // "add",
+  // "commit",
+  // "tag",
+  // "branch -d",
+  // "branch -D",
+  // "revert",
+  // "checkout",
+  // "switch",
+  // "cherry-pick",
+  // === リスク低
   "reset",
   "clean",
-  "rebase",
-  "commit",
-  "cherry-pick",
-  "revert",
   "rm",
   "mv",
-  "tag",
-  "branch -d",
-  "branch -D",
+  "log",
 ];
 
 export const gitCommand: ToolDefinition = {
@@ -62,7 +70,9 @@ export const gitCommand: ToolDefinition = {
         : `git --no-pager ${subcommand}`;
       const { stdout, stderr } = await execAsync(command, execOptions);
       return {
-        content: [{ type: "text" as const, text: stdout || stderr || "(no output)" }],
+        content: [
+          { type: "text" as const, text: stdout || stderr || "(no output)" },
+        ],
       };
     } catch (error: any) {
       return {
