@@ -151,6 +151,7 @@ const BLOCKED_GIT_COMMANDS = [
   "clean",
   "rm",
   "mv",
+  "log",
 ];
 
 server.tool(
