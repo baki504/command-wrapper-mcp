@@ -129,23 +129,29 @@ server.tool(
   }
 );
 
+// ※取扱注意
 const BLOCKED_GIT_COMMANDS = [
-  "merge",
-  "push",
-  "pull",
-  "reset",
-  "clean",
-  "rebase",
+  // === リスク高
+  // "push",
+  // "pull",
+  // "merge",
+  // "rebase",
+  // === リスク中
+  // "add",
+  // "commit",
+  // "tag",
+  // "branch -d",
+  // "branch -D",
+  // "revert",
   // "checkout",
   // "switch",
-  "commit",
-  "cherry-pick",
-  "revert",
+  // "cherry-pick",
+  // === リスク低
+  "reset",
+  "clean",
   "rm",
   "mv",
-  "tag",
-  "branch -d",
-  "branch -D",
+  "log",
 ];
 
 server.tool(
