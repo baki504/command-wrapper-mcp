@@ -20,7 +20,8 @@ const server = new McpServer({
 });
 
 const registerTool = (tool: ToolDefinition) => {
-  server.tool(tool.name, tool.description, tool.schema, tool.handler);
+  const { name, description, schema, handler } = tool;
+  server.tool(name, description, schema, handler);
 };
 
 [runTest, runLint, runFormat, gitCommand].forEach(registerTool);
